@@ -59,8 +59,7 @@ public class BTree<E extends Comparable<E>> {
     }
 
     public boolean search(E value) {
-        //TODO implement here!
-        return false;
+        return root == null ? null : root.search(value);
     }
 
     public int size() {

@@ -254,6 +254,18 @@ public class BNodeGeneric<E extends Comparable<E>>{
         sibling.num -= 1;
     }
 
+    public boolean search(E key){
+        int i = 0;
+        while (i < num && key.compareTo(keys.elementAt(i)) > 0)
+            i++;
+
+        if (keys.elementAt(i).compareTo(key) == 0)
+            return true;
+        if (isLeaf)
+            return false;
+        return children.elementAt(i).search(key);
+    }
+
     public void recorrido(){
         int i;
         for (i = 0; i < num; i++){
