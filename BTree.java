@@ -36,9 +36,22 @@ public class BTree<E extends Comparable<E>> {
         }
     }
 
-    public E remove(E value) {
-        //TODO implement here!
-        return null;
+    public void remove(E value) {
+        if (root == null){
+            System.out.println("El árbol está vacío");
+            return;
+        }
+
+        root.remove(value);
+
+        if (root.num == 0){ // If the root node has 0 keys
+            // If it has a child, its first child is taken as the new root,
+            // Otherwise, set the root node to null
+            if (root.isLeaf)
+                root = null;
+            else
+                root = root.children.elementAt(0);
+        }
     }
 
     public void clear() {
