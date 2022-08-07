@@ -9,7 +9,7 @@ public class BTree<E extends Comparable<E>> {
         this.MinDeg = deg;
     }
 
-    public boolean add(E value) {
+    public void add(E value) {
         if (root == null){
             root = new BNodeGeneric<E>(MinDeg,true);
             root.keys.set(0, value);
@@ -25,9 +25,9 @@ public class BTree<E extends Comparable<E>> {
                 s.splitChild(0,root);
                 // The new root node has 2 child nodes. Move the old one over there
                 int i = 0;
-                if (s.keys.get(0).compareTo(value) < 0)
+                if (s.keys.elementAt(0).compareTo(value) < 0)
                     i++;
-                s.children.get(i).insertNotFull(value);
+                s.children.elementAt(i).insertNotFull(value);
 
                 root = s;
             }
@@ -53,5 +53,11 @@ public class BTree<E extends Comparable<E>> {
     public int size() {
         //TODO implement here!
         return 0;
+    }
+
+    public void recorrido(){
+        if (root != null){
+            root.recorrido();
+        }
     }
 }

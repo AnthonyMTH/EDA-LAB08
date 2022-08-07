@@ -1,6 +1,6 @@
 import java.util.Vector;
 
-public class BNodeGeneric<E> {
+public class BNodeGeneric<E extends Comparable<E>>{
 
     Vector<E> keys;
     Vector<BNodeGeneric<E>> children;
@@ -11,36 +11,81 @@ public class BNodeGeneric<E> {
     public BNodeGeneric(int deg,boolean isLeaf){
         this.MinDeg = deg;
         this.isLeaf = isLeaf;
-        this.keys = new Vector<E>(2*this.MinDeg-1); // Node has 2*MinDeg-1 keys at most
-        this.children = new Vector <BNodeGeneric<E>>(2*this.MinDeg);
+        this.keys = new Vector<E>(); // 2*MinDeg-1 como máximo
+        for (int i = 0; i < 2*MinDeg-1; i++) 
+        	keys.add(null);
+        this.children = new Vector <BNodeGeneric<E>>();
+        for(int i = 0; i < 2*MinDeg; i++) 
+        	children.add(null);
         this.num = 0;
     }
 
     public void insertNotFull(E key){
 
-        int i = num -1; // Initialize i as the rightmost index
+        int i = num - 1; 
 
-        if (isLeaf){ // When it is a leaf node
-            // Find the location where the new key should be inserted
-            while (i >= 0 && keys.get(i).compareTo(key) > 0){
-                keys.set(i+1, keys.get(i)); // keys backward shift
+        if (isLeaf){ // Si es hoja
+            // Bucle para buscar donde se debe insertar
+            while (i >= 0 && keys.elementAt(i).compareTo(key) > 0){
+                keys.set(i+1, keys.elementAt(i)); 
                 i--;
             }
             keys.set(i+1, key);
             num++;
         }
         else{
-            // Find the child node location that should be inserted
-            while (i >= 0 && keys.get(i).compareTo(key) > 0)
+            // Para encontrar la ubicación del hijo que se debe insertar
+            while (i >= 0 && keys.elementAt(i).compareTo(key) > 0)
                 i--;
-            if (children.get(i+1).num == 2*MinDeg - 1){ // When the child node is full
-                splitChild(i+1,children.get(i+1));
-                // After splitting, the key in the middle of the child node moves up, and the child node splits into two
-                if (keys.get(i+1).compareTo(key) < 0)
+            if (children.elementAt(i+1).num == 2*MinDeg - 1){ // Si el hijo está lleno
+                splitChild(i+1,children.elementAt(i+1));
+                // Proceso de división del nodo
+                if (keys.elementAt(i+1).compareTo(key) < 0)
                     i++;
             }
-            children.get(i+1).insertNotFull(key);
+            children.elementAt(i+1).insertNotFull(key);
         }
     }
+
+    public void splitChild(int i, BNodeGeneric<E> y){
+
+        // First, create a node to hold the keys of MinDeg-1 of y
+        BNodeGeneric<E> z = new BNodeGeneric<E>(y.MinDeg, y.isLeaf);
+        z.num = MinDeg - 1;
+
+        // Pass the properties of y to z
+        for (int j = 0; j < MinDeg-1; j++)
+            z.keys.set(j, y.keys.elementAt(j+MinDeg));
+        if (!y.isLeaf){
+            for (int j = 0; j < MinDeg; j++)
+                z.children.set(j, y.children.elementAt(j+MinDeg));
+        }
+        y.num = MinDeg-1;
+
+        // Insert a new child into the child
+        for (int j = num; j >= i+1; j--)
+            children.set(j+1, children.elementAt(j));
+        children.set(i+1, z);
+
+        // Move a key in y to this node
+        for (int j = num-1; j >= i; j--)
+            keys.set(j+1, keys.elementAt(j));
+        keys.set(i, y.keys.elementAt(MinDeg-1));
+
+        num++;
+    }
+
     
+    public void recorrido(){
+        int i;
+        for (i = 0; i < num; i++){
+            if (!isLeaf)
+                children.elementAt(i).recorrido();
+                System.out.print(keys.elementAt(i)+ " ");
+        }
+
+        if (!isLeaf){
+            children.elementAt(i).recorrido();
+        }
+    }
 }
