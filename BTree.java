@@ -16,14 +16,14 @@ public class BTree<E extends Comparable<E>> {
             root.num = 1;
         }
         else {
-            // When the root node is full, the tree will grow high
+            // Cuando la raiz esté llena, el árbol crecerá
             if (root.num == 2*MinDeg-1){
                 BNodeGeneric<E> s = new BNodeGeneric<E>(MinDeg,false);
-                // The old root node becomes a child of the new root node
+                // El antiguo nodo raíz se convierte en hijo del nuevo nodo raíz
                 s.children.set(0, root);
-                // Separate the old root node and give a key to the new node
+                // Separar el antiguo nodo raíz y dar una clave al nuevo nodo
                 s.splitChild(0,root);
-                // The new root node has 2 child nodes. Move the old one over there
+                // El nuevo nodo raíz tiene 2 nodos hijos. Mueve el antiguo hacia allí
                 int i = 0;
                 if (s.keys.elementAt(0).compareTo(value) < 0)
                     i++;
@@ -54,17 +54,8 @@ public class BTree<E extends Comparable<E>> {
         }
     }
 
-    public void clear() {
-        //TODO implement here!
-    }
-
     public boolean search(E value) {
         return root == null ? null : root.search(value);
-    }
-
-    public int size() {
-        //TODO implement here!
-        return 0;
     }
 
     public void recorrido(){

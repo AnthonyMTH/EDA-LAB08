@@ -86,7 +86,7 @@ public class BNodeGeneric<E extends Comparable<E>>{
         }
         else{
             if (isLeaf){ // Si a estas alturas se verifica que es hoja, entonces, no existe en el árbol
-                System.out.println("La clave" + key + " no existe en el árbol");
+                System.out.println("La clave " + key + " no existe en el árbol");
                 return;
             }
 
